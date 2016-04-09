@@ -13,7 +13,7 @@ Engine.prototype.initMap = function () {
   for (var x = 0 ; x< this.x_len ; x++){
         this.map[x] = new Array()
       for (var y = 0 ; y< this.y_len ; y++){
-        this.map[x][y] = this.cell(x,y)
+        this.map[x][y] = this.createCell(x,y)
       }
   }
 }
@@ -53,7 +53,7 @@ Engine.prototype.compare= function (c1x, c2y , c2x, c2y){
   return 0
 }
 
-Engine.prototype.createLink= function(c1x, c2y , c2x, c2y){
+Engine.prototype.linkNode= function(c1x, c2y , c2x, c2y){
   if(!this.nodeExists(exist) || !this.nodeExists(exist) ){
     console.log("no node : {"+c1x+","+c2y+"} , {"+c2x+","+c2y+"}")
     return
@@ -62,13 +62,21 @@ Engine.prototype.createLink= function(c1x, c2y , c2x, c2y){
   if( comp == 0){
     console.log("Error: cells on same positons")
   } else if ( comp < 1){
-    this.map[c1x][c1y].links.push({c2x, c2y})
+    this.map[c1x][c1y].links.push(this.createLink(c2x,c2y,0))
   } else{
-    this.map[c2x][c2y].links.push({c1x, c1y})
+    this.map[c2x][c2y].links.push(this.createLink(c1y,c1y,0))
   }
 }
 
-Engine.prototype.cell = function (x,y) {
+Engine.prototype.createLink = function (xTo, yTo, distance) {
+  return {
+    "x" : xTo,
+    "y" : yTo,
+    "distance" : distance
+  }
+}
+
+Engine.prototype.createCell = function (x,y) {
   return {
     "x" : x,
     "y" : y,
