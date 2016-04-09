@@ -1,10 +1,10 @@
-function Engine() {
+function Engine(w, h) {
   console.log("init engine")
 
   this.map = new Array()
   this.map = new Array()
-  this.x_len = 10
-  this.y_len = 20
+  this.x_len = w
+  this.y_len = h
 
   this.initMap()
 }
@@ -29,6 +29,7 @@ Engine.prototype.update = function () {
 }
 
 Engine.prototype.nodeExists = function (x,y) {
+  console.log(x, y)
   return this.map[x][y].hasNode
 }
 
