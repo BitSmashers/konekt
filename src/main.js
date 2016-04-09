@@ -1,3 +1,4 @@
+require('./engine')
 var game = new Phaser.Game(640, 480, Phaser.AUTO, 'konekt-game');
 game.state.add('boot', require('./boot'));
 game.state.add('preloader', require('./preloader'));
