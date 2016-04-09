@@ -1,17 +1,15 @@
-function Game() {}
+function Game() {
+}
+
 
 Game.prototype.create = function () {
   this.input.onDown.add(this.onInputDown, this);
+  e = Engine()
+  e.update()
 };
 
 Game.prototype.update = function () {
-
-  var struct = {
-    key: "value",
-    otherKey: ["this", "is", "an, "arraY"],
-    anObj : { aKey : 12, b: "dd"}
-  }
-
+  e.update
 };
 
 Game.prototype.render = function () {
