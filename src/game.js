@@ -6,13 +6,20 @@ Game.prototype.create = function () {
 
 Game.prototype.update = function () {
 
+  var struct = {
+    key: "value",
+    otherKey: ["this", "is", "an, "arraY"],
+    anObj : { aKey : 12, b: "dd"}
+  }
+
 };
 
 Game.prototype.render = function () {
 };
 
 Game.prototype.onInputDown = function () {
-  this.game.state.start('menu');
+
+
 };
 
 module.exports = Game;
