@@ -87,14 +87,14 @@ Engine.prototype.linkNode= function(xA, yA , xB, yB){
     console.log("no node : {"+xA+","+yA+"} , {"+xB+","+yB+"}")
     return
   }
-  if(!linkExists(xA, yA , xB, yB)){
+  if(!this.linkExists(xA, yA , xB, yB)){
     this.links.push(this.createLink(c1x, c2y , c2x, c2y))
     this.update()
   }
 }
 
 //new Link struct
-Engine.prototype.linkExists = function (xA, yA,xB, yB) {
+Engine.prototype.linkExists = function(xA, yA,xB, yB) {
   for(var i = 0; i<this.links.length ; i++){
     var link = this.links[i]
     if(link.coordA.x === xA && link.coordA.y === yA &&
