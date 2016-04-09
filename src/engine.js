@@ -2,7 +2,8 @@ function Engine() {
   console.log("init engine")
 
   this.map = new Array()
-  this.map = new Array()
+  this.links = new Array()
+  this.intersects = new Array()
   this.x_len = 10
   this.y_len = 20
 
@@ -21,11 +22,32 @@ Engine.prototype.initMap = function () {
 
 Engine.prototype.update = function () {
   console.log("update")
-  for (var x = 0 ; x < this.x_len ; x++){
-      for (var y = 0 ; y < this.y_len ; y++){
-        // console.log(this.map[x][y])
+  this.intersect = new Array()
+
+  //n2 intersect calculation
+  for (var i = 0 ; i < this.links.length ; i++){
+      for (var j = 0 ; j < this.links.length ; j++){
+        if(this.intersect(this.links[i],this.links[j])){
+          this.intersects.push(this.createIntersect(this.links[i],this.links[j]))
+        }
       }
   }
+  console.log(this.intersects);
+}
+
+Engine.prototype.createIntersect = function(linkA, linkB, coord) {
+  return {
+    "coord" : coord,
+    "linkA" : linkA,
+    "linkB" : linkB
+  }
+}
+
+Engine.prototype.linkIntersect = function (linkA,linkB) {
+  //((Yb-Ya)/(Xb-Xa))-((Yd-Yc)/(Xd-Xc))] != 0
+    var v1 = (linkA.coordB.y - linkA.coordA.y) / (linkA.coordB.x - linkA.coordA.x)
+    var v2 = (linkB.coordB.y - linkB.coordA.y) / (linkB.coordB.x - linkB.coordA.x)
+    return v1 - v2 != 0
 }
 
 Engine.prototype.nodeExists = function (x,y) {
@@ -38,6 +60,10 @@ Engine.prototype.removeNode = function (x,y) {
 
 Engine.prototype.createNode = function (x,y) {
     this.map[x][y].hasNode = true
+}
+
+Engine.prototype.getCell = function (x,y) {
+    return this.map[x][y]
 }
 
 // internal : return -1 if c1 if before c2, 0 if same position, 1 otherwise
@@ -60,22 +86,23 @@ Engine.prototype.linkNode= function(c1x, c2y , c2x, c2y){
     console.log("no node : {"+c1x+","+c2y+"} , {"+c2x+","+c2y+"}")
     return
   }
-  var comp = this.compare(c1x, c2y , c2x, c2y)
-  if( comp == 0){
-    console.log("Error: cells on same positons")
-  } else if ( comp < 1){
-    this.map[c1x][c1y].links.push(this.createLink(c2x,c2y,0))
-  } else{
-    this.map[c2x][c2y].links.push(this.createLink(c1y,c1y,0))
-  }
+  this.links.push(this.createLink(c1x, c2y , c2x, c2y))
+  // var comp = this.compare(c1x, c2y , c2x, c2y)
+  // if( comp == 0){
+  //   console.log("Error: cells on same positons")
+  // } else if ( comp < 1){
+  //   this.links[c1x][c1y].links.push(this.createLink(c2x,c2y,0))
+  // } else{
+  //   this.map[c2x][c2y].links.push(this.createLink(c1y,c1y,0))
+  // }
 }
 
 //new Link struct
-Engine.prototype.createLink = function (xTo, yTo, distance) {
+Engine.prototype.createLink = function (xA, yA,xB, yB) {
   return {
-    "x" : xTo,
-    "y" : yTo,
-    "distance" : distance
+    "coordA" : {"x": xA, "y" : yA},
+    "coordB" : {"x" : xB, "y" : yB},
+    "distance" : 0
   }
 }
 
@@ -83,10 +110,8 @@ Engine.prototype.createLink = function (xTo, yTo, distance) {
 //new Cell struct
 Engine.prototype.createCell = function (x,y) {
   return {
-    "x" : x,
-    "y" : y,
-    "hasNode" : false,
-    "links" : []
+    "coord" : {"x" : x, "y" : y},
+    "hasNode" : false
   }
 }
 
