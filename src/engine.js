@@ -23,7 +23,7 @@ Engine.prototype.update = function () {
   console.log("update")
   for (var x = 0 ; x < this.x_len ; x++){
       for (var y = 0 ; y < this.y_len ; y++){
-         console.log(this.map[x][y])
+        // console.log(this.map[x][y])
       }
   }
 }
