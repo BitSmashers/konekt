@@ -82,13 +82,14 @@ Engine.prototype.compare = function (c1x, c2y , c2x, c2y){
 }
 
 //Create a link between the two nodes, do nothing if not possible
-Engine.prototype.linkNode= function(xA, ya , xb, yB){
+Engine.prototype.linkNode= function(xA, yA , xB, yB){
   if(!this.nodeExists(xA,yA) || !this.nodeExists(xB,yB) ){
     console.log("no node : {"+xA+","+yA+"} , {"+xB+","+yB+"}")
     return
   }
   if(!linkExists(xA, yA , xB, yB)){
     this.links.push(this.createLink(c1x, c2y , c2x, c2y))
+    this.update()
   }
 }
 
