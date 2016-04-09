@@ -20,10 +20,16 @@ Game.prototype.create = function () {
   engine = new Engine(100, 100)
   console.log(engine)
 
+  selectedNode = null
+
   cursorNode = this.game.add.sprite(100, 100, 'node')
-  //cursorNode.anchor.set(0.5)
+  cursorNode.anchor.set(0.5)
   cursorNode.tint = 0xffaaff
   cursorNode.visible = false
+
+  selector = this.game.add.sprite(0, 0, 'selector')
+  selector.anchor.set(0.5)
+  selector.scale.set(GRID_SIZE / selector.width)
 
   keys = this.game.input.keyboard.addKeys({
     'node': Phaser.KeyCode.N
@@ -37,10 +43,14 @@ Game.prototype.update = function () {
 };
 
 Game.prototype.snap = function (v) {
-  return v - v % GRID_SIZE
+  return Math.round(v / GRID_SIZE) * GRID_SIZE
 }
 
-Game.prototype.toGraphCoord = function (v) {
+Game.prototype.fromGrid = function (v) {
+  return v * GRID_SIZE + GRID_SIZE * 0.5
+}
+
+Game.prototype.toGrid = function (v) {
   return this.snap(v) / GRID_SIZE
 }
 
@@ -48,15 +58,21 @@ Game.prototype.togglePutNode = function() {
   if(keys.node.isDown) {
     if(cursorStatus == FREE) {
       cursorStatus = PUT_NODE
-        cursorNode.visible = true
+      cursorNode.visible = true
+      selector.visible = false
+
     } else if(cursorStatus == PUT_NODE) {
       cursorStatus = FREE
-        cursorNode.visible = false
+      cursorNode.visible = false
+      selector.visible = true
+
     }
   }
 }
 
 Game.prototype.render = function () {
+  this.game.debug.text( this.toGrid(this.input.x) + ", " + this.toGrid(this.input.y), 10, 20 )
+
 
   if(cursorStatus == PUT_NODE) {
     cursorNode.position.set(
@@ -69,6 +85,12 @@ Game.prototype.render = function () {
       this.snap(this.input.y)
     )
 
+  }
+  if (cursorStatus == FREE || cursorStatus == LINKING) {
+    selector.position.set(
+      this.snap(this.input.x),
+      this.snap(this.input.y)
+    )
   }
 
   for(var l in lines) {
@@ -83,8 +105,9 @@ Game.prototype.addNode = function (x, y) {
   var n = nodes.create(x, y, 'node')
   n.anchor.set(0.5)
 
-  engine.createNode(this.toGraphCoord(x), this.toGraphCoord(y))
-  console.log(engine.nodeExists(this.toGraphCoord(x), this.toGraphCoord(y)))
+  n.scale.set(GRID_SIZE / n.width)
+
+  engine.createNode(this.toGrid(x), this.toGrid(y))
 
   return n
 }
@@ -95,13 +118,23 @@ Game.prototype.onInputDown = function (e) {
 
   if(cursorStatus == FREE) {
     console.log(e, this)
-    if(engine.nodeExists(this.toGraphCoord(e.x), this.toGraphCoord(e.y)))
-      console.log("EXISSSS")
+    if(engine.nodeExists(this.toGrid(e.x), this.toGrid(e.y))) {
+      cursorStatus = LINKING
+      selectedNode = engine.getCell(this.toGrid(e.x), this.toGrid(e.y))
+      cursorLine = new Phaser.Line(this.snap(e.x), this.snap(e.y), this.snap(e.x), this.snap(e.y))
+    }
 
   } else if ( cursorStatus == LINKING) {
     console.log( cursorLine.start.x, cursorLine.start.y, cursorLine.end.x, cursorLine.end.y)
-    lines.push(new Phaser.Line(cursorLine.start.x, cursorLine.start.y, cursorLine.end.x, cursorLine.end.y))
-    cursorStatus = FREE
+
+    if(engine.nodeExists(this.toGrid(e.x), this.toGrid(e.y))) {
+      lines.push(new Phaser.Line(cursorLine.start.x, cursorLine.start.y, cursorLine.end.x, cursorLine.end.y))
+      console.log(lines)
+
+      engine.linkNode(selectedNode.x, selectedNode.y, this.toGrid(e.x), this.toGrid(e.y))
+
+      cursorStatus = FREE
+    }
   } else if(cursorStatus == PUT_NODE) {
     var x = this.snap(e.x)
     var y = this.snap(e.y)

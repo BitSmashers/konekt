@@ -9,7 +9,8 @@ Preloader.prototype.preload = function () {
 
   // this.load.onLoadComplete.addOnce(this.onLoadComplete, this);
   // this.loadResources();
-  var n = this.game.load.image('node', 'assets/node.png')
+  this.game.load.image('node', 'assets/node.png')
+  this.game.load.image('selector', 'assets/selector.png')
 
   this.ready = true;
 
