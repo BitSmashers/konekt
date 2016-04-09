@@ -18,6 +18,10 @@ Engine.prototype.initMap = function () {
   }
 }
 
+Engine.prototype.nodeExists = function (x,y) {
+  return this.map[x][y].hasNode
+}
+
 Engine.prototype.update = function () {
   console.log("update")
   for (var x = 0 ; x < this.x_len ; x++){
