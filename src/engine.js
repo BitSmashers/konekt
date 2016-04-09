@@ -9,6 +9,7 @@ function Engine() {
   this.initMap()
 }
 
+//Init cells
 Engine.prototype.initMap = function () {
   for (var x = 0 ; x< this.x_len ; x++){
         this.map[x] = new Array()
@@ -18,17 +19,17 @@ Engine.prototype.initMap = function () {
   }
 }
 
-Engine.prototype.nodeExists = function (x,y) {
-  return this.map[x][y].hasNode
-}
-
 Engine.prototype.update = function () {
   console.log("update")
   for (var x = 0 ; x < this.x_len ; x++){
       for (var y = 0 ; y < this.y_len ; y++){
-        // console.log(this.map[x][y])
+         console.log(this.map[x][y])
       }
   }
+}
+
+Engine.prototype.nodeExists = function (x,y) {
+  return this.map[x][y].hasNode
 }
 
 Engine.prototype.removeNode = function (x,y) {
@@ -40,7 +41,7 @@ Engine.prototype.createNode = function (x,y) {
 }
 
 // internal : return -1 if c1 if before c2, 0 if same position, 1 otherwise
-Engine.prototype.compare= function (c1x, c2y , c2x, c2y){
+Engine.prototype.compare = function (c1x, c2y , c2x, c2y){
   if(c1x < c2x){
     return -1
   } else if (c1x > c2x){
@@ -53,6 +54,7 @@ Engine.prototype.compare= function (c1x, c2y , c2x, c2y){
   return 0
 }
 
+//Create a link between the two nodes, do nothing if not possible
 Engine.prototype.linkNode= function(c1x, c2y , c2x, c2y){
   if(!this.nodeExists(exist) || !this.nodeExists(exist) ){
     console.log("no node : {"+c1x+","+c2y+"} , {"+c2x+","+c2y+"}")
@@ -68,6 +70,7 @@ Engine.prototype.linkNode= function(c1x, c2y , c2x, c2y){
   }
 }
 
+//new Link struct
 Engine.prototype.createLink = function (xTo, yTo, distance) {
   return {
     "x" : xTo,
@@ -76,6 +79,8 @@ Engine.prototype.createLink = function (xTo, yTo, distance) {
   }
 }
 
+
+//new Cell struct
 Engine.prototype.createCell = function (x,y) {
   return {
     "x" : x,
