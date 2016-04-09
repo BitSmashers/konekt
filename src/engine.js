@@ -27,7 +27,7 @@ Engine.prototype.update = function () {
   //n2 intersect calculation
   for (var i = 0 ; i < this.links.length ; i++){
       for (var j = 0 ; j < this.links.length ; j++){
-        if(this.intersect(this.links[i],this.links[j])){
+        if(this.linkIntersect(this.links[i],this.links[j])){
           this.intersects.push(this.createIntersect(this.links[i],this.links[j]))
         }
       }
@@ -88,7 +88,7 @@ Engine.prototype.linkNode= function(xA, yA , xB, yB){
     return
   }
   if(!this.linkExists(xA, yA , xB, yB)){
-    this.links.push(this.createLink(c1x, c2y , c2x, c2y))
+    this.links.push(this.createLink(xA, yA , xB, yB))
     this.update()
   }
 }
