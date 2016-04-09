@@ -14,7 +14,7 @@ function Engine(w, h) {
 Engine.prototype.initMap = function () {
   for (var x = 0 ; x< this.x_len ; x++){
         this.map[x] = new Array()
-      for (var y = 0 ; y< this.y_len ; y++){
+      for (var y = 0 ; y < this.y_len ; y++){
         this.map[x][y] = this.createCell(x,y)
       }
   }
@@ -82,20 +82,28 @@ Engine.prototype.compare = function (c1x, c2y , c2x, c2y){
 }
 
 //Create a link between the two nodes, do nothing if not possible
-Engine.prototype.linkNode= function(c1x, c2y , c2x, c2y){
-  if(!this.nodeExists(exist) || !this.nodeExists(exist) ){
-    console.log("no node : {"+c1x+","+c2y+"} , {"+c2x+","+c2y+"}")
+Engine.prototype.linkNode= function(xA, ya , xb, yB){
+  if(!this.nodeExists(xA,Yb) || !this.nodeExists(xB,yB) ){
+    console.log("no node : {"+xA+","+yA+"} , {"+xB+","+yB+"}")
     return
   }
-  this.links.push(this.createLink(c1x, c2y , c2x, c2y))
-  // var comp = this.compare(c1x, c2y , c2x, c2y)
-  // if( comp == 0){
-  //   console.log("Error: cells on same positons")
-  // } else if ( comp < 1){
-  //   this.links[c1x][c1y].links.push(this.createLink(c2x,c2y,0))
-  // } else{
-  //   this.map[c2x][c2y].links.push(this.createLink(c1y,c1y,0))
-  // }
+  if(!linkExists(xA, yA , xB, yB)){
+    this.links.push(this.createLink(c1x, c2y , c2x, c2y))
+  }
+}
+
+//new Link struct
+Engine.prototype.linkExists = function (xA, yA,xB, yB) {
+  for(var i = 0; i<this.links.length ; i++){
+    var link = this.links[i]
+    if(link.coordA.x === xA && link.coordA.y === yA &&
+        link.coordB.x === xB && link.coordB.y === yB ||
+        link.coordB.x === xA && link.coordB.y === yA &&
+        link.coordA.x === xB && link.coordA.y === yB  ){
+          return true
+        }
+  }
+  return false
 }
 
 //new Link struct
@@ -107,7 +115,6 @@ Engine.prototype.createLink = function (xA, yA,xB, yB) {
   }
 }
 
-
 //new Cell struct
 Engine.prototype.createCell = function (x,y) {
   return {
@@ -116,6 +123,4 @@ Engine.prototype.createCell = function (x,y) {
   }
 }
 
-//  "otherKey": ["this", "is", "an", "arraY"],
-//  anObj : { aKey : 12, b: "dd"}
 module.exports = Engine;
