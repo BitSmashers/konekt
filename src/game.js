@@ -120,6 +120,7 @@ Game.prototype.onInputDown = function (e) {
     if(engine.nodeExists(this.toGrid(e.x), this.toGrid(e.y))) {
       cursorStatus = LINKING
       selectedNode = engine.getCell(this.toGrid(e.x), this.toGrid(e.y))
+      console.log(selectedNode)
       cursorLine = new Phaser.Line(this.snap(e.x), this.snap(e.y), this.snap(e.x), this.snap(e.y))
     }
 
@@ -130,7 +131,7 @@ Game.prototype.onInputDown = function (e) {
       lines.push(new Phaser.Line(cursorLine.start.x, cursorLine.start.y, cursorLine.end.x, cursorLine.end.y))
       console.log(lines)
 
-      engine.linkNode(selectedNode.x, selectedNode.y, this.toGrid(e.x), this.toGrid(e.y))
+      engine.linkNode(selectedNode.coord.x, selectedNode.coord.y, this.toGrid(e.x), this.toGrid(e.y))
     }
 
     cursorStatus = FREE
