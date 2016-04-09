@@ -1,11 +1,11 @@
-function Engine() {
+function Engine(w, h) {
   console.log("init engine")
 
   this.map = new Array()
   this.links = new Array()
   this.intersects = new Array()
-  this.x_len = 10
-  this.y_len = 20
+  this.x_len = w
+  this.y_len = h
 
   this.initMap()
 }
@@ -51,6 +51,7 @@ Engine.prototype.linkIntersect = function (linkA,linkB) {
 }
 
 Engine.prototype.nodeExists = function (x,y) {
+  console.log(x, y)
   return this.map[x][y].hasNode
 }
 
