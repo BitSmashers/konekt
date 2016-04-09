@@ -26,7 +26,7 @@ Engine.prototype.update = function () {
   console.log("update")
   for (var x = 0 ; x < this.x_len ; x++){
       for (var y = 0 ; y < this.y_len ; y++){
-        console.log(this.map[x][y])
+        // console.log(this.map[x][y])
       }
   }
 }
@@ -36,10 +36,10 @@ Engine.prototype.removeNode = function (x,y) {
 }
 
 Engine.prototype.createNode = function (x,y) {
-    this.map[x][y].hasNode = false
+    this.map[x][y].hasNode = true
 }
 
-// return -1 if c1 if before c2, 0 if same position, 1 otherwise
+// internal : return -1 if c1 if before c2, 0 if same position, 1 otherwise
 Engine.prototype.compare= function (c1x, c2y , c2x, c2y){
   if(c1x < c2x){
     return -1
@@ -54,13 +54,17 @@ Engine.prototype.compare= function (c1x, c2y , c2x, c2y){
 }
 
 Engine.prototype.createLink= function(c1x, c2y , c2x, c2y){
+  if(!this.nodeExists(exist) || !this.nodeExists(exist) ){
+    console.log("no node : {"+c1x+","+c2y+"} , {"+c2x+","+c2y+"}")
+    return
+  }
   var comp = this.compare(c1x, c2y , c2x, c2y)
   if( comp == 0){
     console.log("Error: cells on same positons")
   } else if ( comp < 1){
     this.map[c1x][c1y].links.push({c2x, c2y})
   } else{
-
+    this.map[c2x][c2y].links.push({c1x, c1y})
   }
 }
 
