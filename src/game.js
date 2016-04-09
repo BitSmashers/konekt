@@ -4,12 +4,12 @@ function Game() {
 
 Game.prototype.create = function () {
   this.input.onDown.add(this.onInputDown, this);
-  e = Engine()
+  console.log()
+    var e = new Engine()
   e.update()
 };
 
 Game.prototype.update = function () {
-  e.update
 };
 
 Game.prototype.render = function () {

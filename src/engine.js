@@ -1,28 +1,14 @@
-function Engine() {
-  var length = 100
-  var height = 200
-  var map
-  var init = false
-
-  function init(){
-    console.log("init")
-  }
-
-
-  return {
-    update : update
-  }
-}
-
-function update(){
+function Engine() {}
+Engine.prototype.update = function () {
   console.log("update")
 }
 
-function cell(){
+Engine.prototype.cell = function () {
   return {
     key: "value",
-    otherKey: {"this", "is", "an", "arraY"},
+    "otherKey": ["this", "is", "an", "arraY"],
     anObj : { aKey : 12, b: "dd"}
-    toto : function(){}
-    }
   }
+}
+
+module.exports = Engine;
