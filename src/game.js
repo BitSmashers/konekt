@@ -55,18 +55,16 @@ Game.prototype.toGrid = function (v) {
 }
 
 Game.prototype.togglePutNode = function() {
-  if(keys.node.isDown) {
-    if(cursorStatus == FREE) {
-      cursorStatus = PUT_NODE
-      cursorNode.visible = true
-      selector.visible = false
+  if(cursorStatus == FREE) {
+    cursorStatus = PUT_NODE
+    cursorNode.visible = true
+    selector.visible = false
 
-    } else if(cursorStatus == PUT_NODE) {
-      cursorStatus = FREE
-      cursorNode.visible = false
-      selector.visible = true
+  } else if(cursorStatus == PUT_NODE) {
+    cursorStatus = FREE
+    cursorNode.visible = false
+    selector.visible = true
 
-    }
   }
 }
 
@@ -80,6 +78,9 @@ Game.prototype.render = function () {
       this.snap(this.input.y)
     )
   } else if (cursorStatus == LINKING) {
+
+    this.game.debug.geom(cursorLine)
+
     cursorLine.end.set(
       this.snap(this.input.x),
       this.snap(this.input.y)
@@ -96,8 +97,6 @@ Game.prototype.render = function () {
   for(var l in lines) {
     this.game.debug.geom(lines[l])
   }
-
-  this.game.debug.geom(cursorLine)
 };
 
 Game.prototype.addNode = function (x, y) {
@@ -132,14 +131,15 @@ Game.prototype.onInputDown = function (e) {
       console.log(lines)
 
       engine.linkNode(selectedNode.x, selectedNode.y, this.toGrid(e.x), this.toGrid(e.y))
-
-      cursorStatus = FREE
     }
+
+    cursorStatus = FREE
   } else if(cursorStatus == PUT_NODE) {
     var x = this.snap(e.x)
     var y = this.snap(e.y)
     var newNode = this.addNode(x, y)
 
+    this.togglePutNode()
   }
 
 
