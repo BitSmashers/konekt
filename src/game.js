@@ -20,6 +20,8 @@ Game.prototype.create = function () {
   engine = new Engine(100, 100)
   console.log(engine)
 
+  selectedNode = null
+
   cursorNode = this.game.add.sprite(100, 100, 'node')
   cursorNode.anchor.set(0.5)
   cursorNode.tint = 0xffaaff
@@ -83,7 +85,8 @@ Game.prototype.render = function () {
       this.snap(this.input.y)
     )
 
-  } else if (cursorStatus == FREE) {
+  }
+  if (cursorStatus == FREE || cursorStatus == LINKING) {
     selector.position.set(
       this.snap(this.input.x),
       this.snap(this.input.y)
@@ -105,7 +108,6 @@ Game.prototype.addNode = function (x, y) {
   n.scale.set(GRID_SIZE / n.width)
 
   engine.createNode(this.toGrid(x), this.toGrid(y))
-  console.log(engine.nodeExists(this.toGrid(x), this.toGrid(y)))
 
   return n
 }
@@ -116,13 +118,23 @@ Game.prototype.onInputDown = function (e) {
 
   if(cursorStatus == FREE) {
     console.log(e, this)
-    if(engine.nodeExists(this.toGrid(e.x), this.toGrid(e.y)))
-      console.log("EXISSSS")
+    if(engine.nodeExists(this.toGrid(e.x), this.toGrid(e.y))) {
+      cursorStatus = LINKING
+      selectedNode = engine.getCell(this.toGrid(e.x), this.toGrid(e.y))
+      cursorLine = new Phaser.Line(this.snap(e.x), this.snap(e.y), this.snap(e.x), this.snap(e.y))
+    }
 
   } else if ( cursorStatus == LINKING) {
     console.log( cursorLine.start.x, cursorLine.start.y, cursorLine.end.x, cursorLine.end.y)
-    lines.push(new Phaser.Line(cursorLine.start.x, cursorLine.start.y, cursorLine.end.x, cursorLine.end.y))
-    cursorStatus = FREE
+
+    if(engine.nodeExists(this.toGrid(e.x), this.toGrid(e.y))) {
+      lines.push(new Phaser.Line(cursorLine.start.x, cursorLine.start.y, cursorLine.end.x, cursorLine.end.y))
+      console.log(lines)
+
+      engine.linkNode(selectedNode.x, selectedNode.y, this.toGrid(e.x), this.toGrid(e.y))
+
+      cursorStatus = FREE
+    }
   } else if(cursorStatus == PUT_NODE) {
     var x = this.snap(e.x)
     var y = this.snap(e.y)
