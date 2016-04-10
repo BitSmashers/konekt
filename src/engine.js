@@ -21,7 +21,7 @@ Engine.prototype.initMap = function () {
 }
 
 Engine.prototype.update = function () {
-  console.log("update")
+  console.log("update intersects")
   this.intersect = new Array()
 
   //n2 intersect calculation
@@ -61,6 +61,10 @@ Engine.prototype.removeNode = function (x,y) {
 
 Engine.prototype.createNode = function (x,y) {
     this.map[x][y].hasNode = true
+}
+
+Engine.prototype.getIntersects = function () {
+    return this.intersects
 }
 
 Engine.prototype.getCell = function (x,y) {
