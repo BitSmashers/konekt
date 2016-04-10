@@ -22,12 +22,21 @@ Engine.prototype.initMap = function () {
 
 Engine.prototype.update = function () {
   console.log("update intersects")
-  this.intersect = new Array()
+  this.intersects = new Array()
 
   //n2 intersect calculation
   for (var i = 0 ; i < this.links.length ; i++){
       for (var j = 0 ; j < this.links.length ; j++){
-        if(this.linkIntersect(this.links[i],this.links[j])){
+        if(i!=j && this.linkIntersect(
+          this.links[i].coordA.x,
+          this.links[i].coordA.y,
+          this.links[i].coordB.x,
+          this.links[i].coordB.y,
+          this.links[j].coordA.x,
+          this.links[j].coordA.y,
+          this.links[j].coordB.x,
+          this.links[j].coordB.y
+          )){
           this.intersects.push(this.createIntersect(this.links[i],this.links[j]))
         }
       }
@@ -42,13 +51,41 @@ Engine.prototype.createIntersect = function(linkA, linkB, coord) {
     "linkB" : linkB
   }
 }
-
-Engine.prototype.linkIntersect = function (linkA,linkB) {
-  //((Yb-Ya)/(Xb-Xa))-((Yd-Yc)/(Xd-Xc))] != 0
-    var v1 = (linkA.coordB.y - linkA.coordA.y) / (linkA.coordB.x - linkA.coordA.x)
-    var v2 = (linkB.coordB.y - linkB.coordA.y) / (linkB.coordB.x - linkB.coordA.x)
-    return v1 - v2 != 0
+Engine.prototype.linkIntersect = function(x1,y1,x2,y2, x3,y3,x4,y4) {
+    var x=((x1*y2-y1*x2)*(x3-x4)-(x1-x2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
+    var y=((x1*y2-y1*x2)*(y3-y4)-(y1-y2)*(x3*y4-y3*x4))/((x1-x2)*(y3-y4)-(y1-y2)*(x3-x4));
+    if (isNaN(x)||isNaN(y)) {
+        return false;
+    } else {
+        if (x1>=x2) {
+            if (!(x2<=x&&x<=x1)) {return false;}
+        } else {
+            if (!(x1<=x&&x<=x2)) {return false;}
+        }
+        if (y1>=y2) {
+            if (!(y2<=y&&y<=y1)) {return false;}
+        } else {
+            if (!(y1<=y&&y<=y2)) {return false;}
+        }
+        if (x3>=x4) {
+            if (!(x4<=x&&x<=x3)) {return false;}
+        } else {
+            if (!(x3<=x&&x<=x4)) {return false;}
+        }
+        if (y3>=y4) {
+            if (!(y4<=y&&y<=y3)) {return false;}
+        } else {
+            if (!(y3<=y&&y<=y4)) {return false;}
+        }
+    }
+    return true;
 }
+// Engine.prototype.linkIntersect = function (linkA,linkB) {
+//   //((Yb-Ya)/(Xb-Xa))-((Yd-Yc)/(Xd-Xc))] != 0
+//     var v1 = (linkA.coordB.y - linkA.coordA.y) / (linkA.coordB.x - linkA.coordA.x)
+//     var v2 = (linkB.coordB.y - linkB.coordA.y) / (linkB.coordB.x - linkB.coordA.x)
+//     return v1 - v2 != 0
+// }
 
 Engine.prototype.nodeExists = function (x,y) {
   console.log(x, y)
